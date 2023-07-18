@@ -1,0 +1,58 @@
+import React, {useState} from 'react'
+import http from '../http';
+import { useNavigate } from 'react-router-dom';
+
+const Create = () => {
+const navigate = useNavigate();
+const [input, setInput] = useState({});
+
+const handleChange = (event) => {
+  const name = event.target.name;
+  const value = event.target.value;
+  setInput((values)=>({...values,[name]:value}));
+  
+
+}
+const submitForm = () =>{
+  console.log(input)
+  http
+  .post('/create-user', input)
+  .then((res)=>{
+    navigate("/");
+  })
+  .catch((error)=>{
+    if(error.res){
+      console.log(error.res.data)
+    }
+  })
+
+}
+
+
+  return (
+  <div className='my-5'>
+        <form >
+          <h1>New user</h1>
+          <div className="form-group">
+              <label>Last name</label>
+              <input type="text" className="form-control" id=""placeholder="Enter Last name" name="LastName" value={input.LastName} onChange={handleChange}/>
+          </div>
+          <div className="form-group">
+            <label>Middle name</label>
+            <input type="text" className="form-control" id=""  placeholder="Enter Middle name"name="MiddleName" value={input.MiddleName} onChange={handleChange} />
+          </div>
+          <div className="form-group">
+            <label>First name</label>
+            <input type="text" className="form-control" id=""  placeholder="Enter First name"name="FirstName" value={input.FirstName}onChange={handleChange}/>
+          </div>
+          <div className="form-group">
+            <label>Guardian</label>
+            <input type="text" className="form-control" id=""  placeholder="Guardian"name="Guardian" value={input.Guardian} onChange={handleChange}/>
+          </div>
+          <button  type="button" className="btn btn-primary my-5" onClick={submitForm}>Submit</button>
+        </form>
+  </div>
+  )
+}
+
+export default Create
