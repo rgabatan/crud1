@@ -1,0 +1,73 @@
+
+import React, {useEffect, useState} from 'react'
+import http from '../http';
+import { useNavigate, useParams } from 'react-router-dom';
+
+//Edit const
+const Edit = () => {
+    const navigate = useNavigate();
+    const [input, setInput] = useState({});
+    const {id} = useParams()
+
+    console.log(id)
+
+const fetchUser=()=>{
+    http.get("/edit-user/"+id).then((res)=>{
+        setInput({
+            LastName:res.data.LastName,
+            MiddleName:res.data.MiddleName,
+            FirstName:res.data.FirstName,
+            Guardian:res.data.Guardian
+
+        })
+        
+    })
+}
+useEffect(()=>{
+    fetchUser()
+},[])
+
+const handleChange = (event) => {
+  const name = event.target.name;
+  const value = event.target.value;
+  setInput((values)=>({...values,[name]:value}));
+  
+
+}
+//update
+const submitForm = () =>{
+    http.post("/update-user/"+id, input).then((res)=>{
+        navigate("/")
+
+    })
+
+}
+
+  return (
+    <div className='my-5'>
+    <form >
+      <h1>Edit user</h1>
+      <div className="form-group">
+          <label>Last name</label>
+          <input type="text" className="form-control" id=""placeholder="Enter Last name" name="LastName" value={input.LastName} onChange={handleChange}/>
+      </div>
+      <div className="form-group">
+        <label>Middle name</label>
+        <input type="text" className="form-control" id=""  placeholder="Enter Middle name"name="MiddleName" value={input.MiddleName} onChange={handleChange} />
+      </div>
+      <div className="form-group">
+        <label>First name</label>
+        <input type="text" className="form-control" id=""  placeholder="Enter First name"name="FirstName" value={input.FirstName}onChange={handleChange}/>
+      </div>
+      <div className="form-group">
+        <label>Guardian</label>
+        <input type="text" className="form-control" id=""  placeholder="Guardian"name="Guardian" value={input.Guardian} onChange={handleChange}/>
+      </div>
+      <button  type="button" className="btn btn-primary my-5" onClick={submitForm}>Update</button>
+    </form>
+</div>
+)
+  
+}
+
+export default Edit
